@@ -12,7 +12,7 @@ RUN docker-php-ext-install pdo pdo_mysql mbstring
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --version=2.0.8 
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Create system user to run Composer and Artisan Commands
 RUN useradd -G www-data,root -u $uid -d /home/$user $user
