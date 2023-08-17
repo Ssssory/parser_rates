@@ -1,0 +1,67 @@
+version: '3'
+
+services:
+  
+  app:
+    build:
+      context: ./docker/
+      dockerfile: Dockerfile
+      args:
+        user: $USER_PHP
+        uid: $UID
+    image: parsing/php
+    container_name: ${PROJECT_NAME}_app
+    restart: unless-stopped
+    tty: true
+    depends_on:
+      - db
+    volumes:
+      - ./src/:/var/www
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: ${PROJECT_NAME}_nginx
+    restart: unless-stopped
+    tty: true
+    depends_on:
+      - app
+    volumes:
+      - ./src/:/var/www
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/:ro
+    ports:
+      - "${PORT-80}:80"
+    networks:
+      - app-network
+
+  db:
+    image: mysql:5.7.22
+    container_name: ${PROJECT_NAME}_db
+    restart: unless-stopped
+    tty: true
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: 123456
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - ./db:/var/lib/mysql
+    networks:
+      - app-network
+
+  redis:
+    image: redis:6.2-alpine
+    container_name: ${PROJECT_NAME}_redis
+    restart: unless-stopped
+    volumes: 
+      - ./cache:/data
+    networks:
+      - app-network
+
+
+networks:
+  app-network:
+    driver: bridge
