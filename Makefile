@@ -13,3 +13,5 @@ seed:
 supervisor:
 	docker exec --user root ${CONTAINER_PHP} service supervisor restart
 	docker exec --user root ${CONTAINER_PHP} service supervisor start laravel-worker
+install:
+	docker exec --user ${USER_PHP} ${CONTAINER_PHP} composer install
