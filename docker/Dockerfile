@@ -6,7 +6,7 @@ ARG uid
 
 WORKDIR /var/www
 
-RUN apt-get update -y && apt-get install -y openssl zip unzip git libonig-dev mc vim htop
+RUN apt-get update -y && apt-get install -y openssl zip unzip git libonig-dev mc vim htop supervisor
 RUN docker-php-ext-install pdo pdo_mysql mbstring
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
